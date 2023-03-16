@@ -1,0 +1,12 @@
+spring:
+  application:
+    name: mybox
+  data:
+    mongodb:
+      uri: mongodb://app:1234@localhost:27017/mybox?authSource=admin
+#      database: local
+#      host: localhost
+#      port: 27017
+#      username: mybox_service
+#      password: bitcash1!
+#      uri: mongodb://admin:admin@localhost:27017/admin?authSource=admin
