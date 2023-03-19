@@ -1,4 +1,4 @@
-package com.mybox.mybox.domain.user;
+package com.mybox.mybox.user.application;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 
@@ -24,8 +24,8 @@ public class UserRouter {
     @Bean
     public RouterFunction<ServerResponse> user(UserHandler userHandler) {
         return RouterFunctions
-            .route(RequestPredicates.GET("/user/{userId}").and(RequestPredicates.accept(APPLICATION_JSON)), userHandler::getUser)
-            .andRoute(RequestPredicates.POST("/user").and(RequestPredicates.accept(APPLICATION_JSON)), userHandler::addUser);
+            .route(RequestPredicates.GET("/users/{userId}").and(RequestPredicates.accept(APPLICATION_JSON)), userHandler::getUser)
+            .andRoute(RequestPredicates.POST("/users").and(RequestPredicates.accept(APPLICATION_JSON)), userHandler::addUser);
     }
 
 //    @Bean

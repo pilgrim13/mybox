@@ -1,6 +1,8 @@
-package com.mybox.mybox.domain.user;
+package com.mybox.mybox.user.application;
 
-import com.mybox.mybox.domain.user.entity.User;
+import com.mybox.mybox.user.domain.dto.UserRequestDto;
+import com.mybox.mybox.user.domain.entity.User;
+import com.mybox.mybox.user.service.UserService;
 import java.net.URI;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
@@ -17,22 +19,13 @@ public class UserHandler {
 
     private final UserService userService;
 
-//    final static MediaType TEXT_HTML = MediaType.TEXT_HTML;
-
     public Mono<ServerResponse> addUser(ServerRequest request) {
-        return request.bodyToMono(User.class)
+        return request.bodyToMono(UserRequestDto.class)
             .flatMap(userService::addUser)
             .flatMap(user -> ServerResponse.created(URI.create("/users/" + user.getId()))
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(BodyInserters.fromValue(user)));
-//            .flatMap(body -> ServerResponse.ok().body(BodyInserters.fromValue(userService.addUser(body))));
     }
-
-//    return request.bodyToMono(Book.class)
-//        .flatMap(book -> Mono.just(bookService.createBook(book)))
-//        .flatMap(book -> ServerResponse.created(URI.create("/books/" + book.getId()))
-//        .contentType(MediaType.APPLICATION_JSON)
-//					.body(BodyInserters.fromValue(book)));
 
     public Mono<ServerResponse> getAllUserList() {
         Flux<User> userList = this.userService.getAllUsers();

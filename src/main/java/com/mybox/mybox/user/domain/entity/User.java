@@ -1,25 +1,22 @@
-package com.mybox.mybox.domain.user.entity;
+package com.mybox.mybox.user.domain.entity;
 
+import com.mybox.mybox.user.domain.constants.Role;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 import javax.persistence.Id;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.Data;
 import lombok.ToString;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 
-@Getter
-@Setter
+@Data
 @Document
 @ToString
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
 public class User implements UserDetails {
 
     @Id
@@ -27,11 +24,24 @@ public class User implements UserDetails {
     private String username;
     private String password;
     private String nickname;
-    private String homeFolder;
+    private Set<GrantedAuthority> roles = new HashSet<>();
+    private boolean active = true;
+
+    @Builder
+    public User(String username, String password, String nickname) {
+        this.username = username;
+        this.password = password;
+        this.nickname = nickname;
+        roles.add(new SimpleGrantedAuthority(Role.ROLE_USER.name()));
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        return roles;
+    }
+
+    public String getHomeFolder() {
+        return "/" + this.username;
     }
 
     @Override
@@ -46,22 +56,23 @@ public class User implements UserDetails {
 
     @Override
     public boolean isAccountNonExpired() {
-        return false;
+        return active;
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return false;
+        return active;
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return false;
+        return active;
     }
 
     @Override
     public boolean isEnabled() {
-        return false;
+        return active;
     }
+
 }
 
