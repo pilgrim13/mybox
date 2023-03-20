@@ -7,9 +7,7 @@ import software.amazon.awssdk.services.s3.model.CompletedPart;
 public class UploadStatus {
 
     private final String fileKey;
-
     private final String contentType;
-
     private String uploadId;
     private int partCounter;
     private int buffered;
@@ -19,7 +17,6 @@ public class UploadStatus {
     public UploadStatus(String contentType, String fileKey) {
         this.contentType = contentType;
         this.fileKey = fileKey;
-
         this.buffered = 0;
     }
 

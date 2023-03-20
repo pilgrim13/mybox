@@ -1,12 +1,11 @@
 package com.mybox.mybox.exception;
 
 import java.util.Optional;
-
-import org.springframework.http.HttpStatus;
-
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import software.amazon.awssdk.core.SdkResponse;
 import software.amazon.awssdk.http.SdkHttpResponse;
+
 @AllArgsConstructor
 public class DownloadFailedException extends RuntimeException {
 

@@ -20,11 +20,9 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.codec.multipart.FilePart;
-import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-import software.amazon.awssdk.core.BytesWrapper;
 import software.amazon.awssdk.core.async.AsyncRequestBody;
 import software.amazon.awssdk.core.async.AsyncResponseTransformer;
 import software.amazon.awssdk.http.SdkHttpResponse;
@@ -59,18 +57,18 @@ public class FileServiceImpl implements FileService {
             .flatMap(response -> Flux.fromIterable(response.contents()))
             .map(s3Object -> new AWSS3Object(s3Object.key(), s3Object.lastModified(), s3Object.eTag(), s3Object.size()));
     }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Mono<byte[]> getByteObject(@NotNull String key) {
-        log.debug("Fetching object as byte array from S3 bucket: {}, key: {}", s3ConfigProperties.getS3BucketName(), key);
-        return Mono.just(GetObjectRequest.builder().bucket(s3ConfigProperties.getS3BucketName()).key(key).build())
-            .map(it -> s3AsyncClient.getObject(it, AsyncResponseTransformer.toBytes()))
-            .flatMap(Mono::fromFuture)
-            .map(BytesWrapper::asByteArray);
-    }
+//
+//    /**
+//     * {@inheritDoc}
+//     */
+//    @Override
+//    public Mono<byte[]> getByteObject(@NotNull String key) {
+//        log.debug("Fetching object as byte array from S3 bucket: {}, key: {}", s3ConfigProperties.getS3BucketName(), key);
+//        return Mono.just(GetObjectRequest.builder().bucket(s3ConfigProperties.getS3BucketName()).key(key).build())
+//            .map(it -> s3AsyncClient.getObject(it, AsyncResponseTransformer.toBytes()))
+//            .flatMap(Mono::fromFuture)
+//            .map(BytesWrapper::asByteArray);
+//    }
 
     @Override
     public Mono<ResponseEntity<Flux<ByteBuffer>>> downloadObject(String objectKey) {
@@ -84,7 +82,7 @@ public class FileServiceImpl implements FileService {
             .fromFuture(s3AsyncClient.getObject(request, AsyncResponseTransformer.toPublisher()))
             .map(response -> {
                 checkResult(response.response());
-                String filename = getMetadataItem(response.response(),"filename",objectKey);
+                String filename = getMetadataItem(response.response(), "filename", objectKey);
                 return ResponseEntity.ok()
                     .header(HttpHeaders.CONTENT_TYPE, response.response().contentType())
                     .header(HttpHeaders.CONTENT_LENGTH, Long.toString(response.response().contentLength()))
@@ -92,8 +90,10 @@ public class FileServiceImpl implements FileService {
                     .body(Flux.from(response));
             });
     }
+
     /**
      * Lookup a metadata key in a case-insensitive way.
+     *
      * @param sdkResponse
      * @param key
      * @param defaultValue
@@ -123,7 +123,7 @@ public class FileServiceImpl implements FileService {
      * {@inheritDoc}
      */
     @Override
-    public Mono<FileResponse> uploadObject(FilePart filePart) {
+    public Mono<FileResponse> uploadObject(String path, FilePart filePart) {
 
         String filename = filePart.filename();
 
