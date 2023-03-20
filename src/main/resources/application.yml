@@ -4,9 +4,17 @@ spring:
   data:
     mongodb:
       uri: mongodb://app:1234@localhost:27017/mybox?authSource=admin
-#      database: local
-#      host: localhost
-#      port: 27017
-#      username: mybox_service
-#      password: bitcash1!
-#      uri: mongodb://admin:admin@localhost:27017/admin?authSource=admin
+
+#aws:
+#  s3:
+#    access-token: n5e1r24yOd9uBjiCmc6z
+#    secret-token: 38MIrKGt6tgq40ygUO37AOEzUR4VulRAdj15rZoR
+#
+# AWS properties
+aws:
+  access-key: n5e1r24yOd9uBjiCmc6z
+  secret-key: 38MIrKGt6tgq40ygUO37AOEzUR4VulRAdj15rZoR
+  region: kr-standard
+  s3-bucket-name: jordy-mybox
+  multipart-min-part-size: 5242880 # 5MB
+  endpoint: https://kr.object.ncloudstorage.com
