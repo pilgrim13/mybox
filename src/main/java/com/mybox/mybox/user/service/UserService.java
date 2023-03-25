@@ -2,15 +2,36 @@ package com.mybox.mybox.user.service;
 
 import com.mybox.mybox.user.domain.dto.UserRequestDto;
 import com.mybox.mybox.user.domain.entity.User;
+import com.mybox.mybox.user.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-public interface UserService {
+@Slf4j
+@Service
+@RequiredArgsConstructor
+public class UserService {
 
-    Mono<User> addUser(UserRequestDto requestDto);
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    Flux<User> getAllUsers();
+    public Mono<User> addUser(UserRequestDto requestDto) {
+        User user = User.builder()
+            .username(requestDto.getUsername())
+            .password(passwordEncoder.encode(requestDto.getPassword()))
+            .nickname(requestDto.getNickname())
+            .build();
+        return userRepository.save(user);
+    }
 
-    Mono<User> getUser(Mono<String> userId);
+    public Flux<User> getAllUsers() {
+        return userRepository.findAll();
+    }
 
+    public Mono<User> getUser(Mono<String> userId) {
+        return userRepository.findById(userId);
+    }
 }

@@ -3,7 +3,6 @@ package com.mybox.mybox.user.application;
 import com.mybox.mybox.user.domain.dto.UserRequestDto;
 import com.mybox.mybox.user.domain.entity.User;
 import com.mybox.mybox.user.service.UserService;
-import java.net.URI;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
@@ -12,6 +11,8 @@ import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
+import java.net.URI;
 
 @Component
 @RequiredArgsConstructor
