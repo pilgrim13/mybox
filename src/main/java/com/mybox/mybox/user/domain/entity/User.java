@@ -41,7 +41,7 @@ public class User implements UserDetails {
     }
 
     public String getHomeFolder() {
-        return "/" + this.username;
+        return this.username + "/";
     }
 
     @Override
