@@ -4,17 +4,22 @@ import com.mybox.mybox.common.FileResponse;
 import com.mybox.mybox.file.domain.AWSS3Object;
 import com.mybox.mybox.file.service.FileService;
 import com.mybox.mybox.user.domain.entity.User;
+import java.nio.ByteBuffer;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.codec.multipart.FilePart;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-
-import java.nio.ByteBuffer;
 
 @Slf4j
 @RestController
@@ -25,12 +30,12 @@ public class FileController {
     private final FileService fileService;
 
     @PostMapping
-    public Mono<FileResponse> uploadFile(@AuthenticationPrincipal User user,
-                                         @RequestPart(value = "file", required = false) FilePart filePart, @RequestPart(value = "path", required = false) String path) {
+    public Mono<FileResponse> uploadMultiFilePart(@AuthenticationPrincipal User user,
+        @RequestPart(value = "file", required = false) FilePart filePart, @RequestPart(value = "path", required = false) String path) {
         if (path == null) {
             path = StringUtils.EMPTY;
         }
-        return fileService.uploadObject(user.getHomeFolder() + path, filePart);
+        return fileService.uploadObjectWithMultiPart(user.getHomeFolder() + path, filePart);
     }
 
     @GetMapping
